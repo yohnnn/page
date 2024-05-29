@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерпретируемый язык программирования Skuffpp</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Интерпретируемый язык программирования Skuffpp</h1>
+    <p>Интерпретатор языка написан на языке программирования F#</p>
+
+    <h2>Авторы</h2>
+    <table>
+        <tr>
+            <th>Имя</th>
+            <th>Роль в проекте</th>
+        </tr>
+        <tr>
+            <td>Иван Драновский</td>
+            <td>Разработчик парсера</td>
+        </tr>
+        <tr>
+            <td>Лев Андрюшин</td>
+            <td>Разработчик интерпретатора, технический писатель</td>
+        </tr>
+        <tr>
+            <td>Артем Муратов</td>
+            <td>Разработчик интерпретатора, технический писатель</td>
+        </tr>
+    </table>
+
+    <h2>Реализованные возможности</h2>
+    <ul>
+        <li>Типизация. Реализованные типы:
+            <ul>
+                <li>real (целое число или число с плавающей точкой);</li>
+                <li>string (строка);</li>
+                <li>bool (логическое значение);</li>
+            </ul>
+        </li>
+        <li>Операторы:
+            <ul>
+                <li>Арифметические операторы (+, -, *, /, //);</li>
+                <li>Логические операторы (&, /);</li>
+                <li>Операторы сравнения (>, >=, <, <=, ==, !=);</li>
+            </ul>
+        </li>
+        <li>Функции;</li>
+        <li>Встроенные функции:
+            <ul>
+                <li>read_real() - возвращает значение real, полученное из потока ввода;</li>
+                <li>read_string() - возвращает значение string, полученное из потока ввода;</li>
+                <li>print(&lt;expr_1&gt;, ..., &lt;expr_n&gt;) - отправляет в поток вывода результаты введенных выражений</li>
+            </ul>
+        </li>
+        <li>Рекурсивный вызов функций;</li>
+        <li>Замыкание;</li>
+        <li>Обработка ошибок (валидация названий переменных, валидация ввода).</li>
+    </ul>
+
+    <h2>Примеры</h2>
+
+    <h3>Объявление переменных</h3>
+    <pre><code>
+real a = 13;
+real b = 10.7;
+real c = read_real();
+string d = "I love F#";
+string e = read_string();
+bool f = false;
+    </code></pre>
+
+    <h3>Объявление функций</h3>
+    <pre><code>
+func increment = ladaCalina (bool i) {
+    i = false
+};
+    </code></pre>
+
+    <h3>Пример операторов сравнения и встроенной функции print</h3>
+    <pre><code>
+real x = 10;
+real y = 20;
+if a > b then
+    print("Максимальное значение: ", a);
+else
+    print("Максимальное значение: ", b);
+    </code></pre>
+
+    <h3>Пример факториала</h3>
+    <pre><code>
+func factorial = lambda (real n) {
+    if (n == 0 | n == 1) then {
+        n = 1
+    } else {
+        n * factorial(n - 1)
+    }
+};
+
+real n = read_real();
+print(factorial(n - 1), factorial(n), factorial(n + 1));
+    </code></pre>
+
+    <h3>Пример счетчика с использованием замыкания</h3>
+    <pre><code>
+func s = qwe (real n) {
+    func k = qwe () {
+        print(n);
+        s(n + 1);
+    }
+};
+
+func cnt = s(0);
+func cnt = cnt();
+func cnt = cnt();
+    </code></pre>
+
+    <h3>Примеры арифметических операций</h3>
+    <pre><code>
+real a = read_real();
+real b = read_real();
+string c = read_string();
+real e = read_real();
+if c = '+' then {e= a + b }
+if c = '-' then {e= a - b }
+if c = '*' then {e= a * b }
+if c = '/' then {e= a / b }
+if c = '//' then {e= a // b }
+    </code></pre>
+
+    <h2>Описание интерпретатора</h2>
+    <p>Интерпретация происходит в два этапа:</p>
+    <ul>
+        <li>Преобразование кода в набор токенов. В нашем проекте для этого используется библиотека FParsec. Реализацию парсера можно увидеть в файле Parser.fs.</li>
+        <li>Для выполнения мы реализовали абстрактный класс Tokens с методом Eval и имплементировали метод для всех дочерних классов. Для хранения переменных мы использовали Map&lt;string, Value&gt;. Сами реализации токенов и метода Eval для них можно увидеть в директории в файле Tokens.fs.
+</ul>
+Запуск самого интерпретатора происходит из файла Program.fs.
